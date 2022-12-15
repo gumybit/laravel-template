@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ./docker/api
+      # dockerfile: ./docker/api/Dockerfile
+    volumes:
+      - ./src/:/api
+  web:
+    build:
+      context: ./docker/web
+    ports:
+      - 8083:80
+    depends_on:
+      - api
+    volumes:
+      - ./src/:/api
+  db:
+    build:
+      context: ./docker/db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - mysql-volume:/var/lib/mysql
+
+volumes:
+  mysql-volume:
